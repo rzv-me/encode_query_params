@@ -86,6 +86,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
         encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
         encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
         encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
+        encodedKey = strings.ReplaceAll(encodedKey, " ", "%20")
         // Add the modified key and values to the new query object
         encodedQuery[encodedKey] = values
     }
