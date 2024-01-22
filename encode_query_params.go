@@ -74,9 +74,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
     // fix dots . in key
 //        encodedKey := strings.ReplaceAll(encodedKey, "[", "%5B")
 //        encodedKey = strings.ReplaceAll(encodedKey, "]", "%5D")
-        encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
-        encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
-        encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
+
 
         for index := range values {
             // Replace the specific character '|' in each value
@@ -85,6 +83,9 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
         }
 
+        encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
+        encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
+        encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
         // Add the modified key and values to the new query object
         encodedQuery[encodedKey] = values
     }
