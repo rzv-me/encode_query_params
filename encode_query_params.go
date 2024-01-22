@@ -69,10 +69,14 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
     for key, values := range query {
         // Encode specific characters in the key
 	encodedKey := key
+    // fix spaces in key
+    // fix tilda ~ in key
+    // fix dots . in key
 //        encodedKey := strings.ReplaceAll(encodedKey, "[", "%5B")
 //        encodedKey = strings.ReplaceAll(encodedKey, "]", "%5D")
         encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
         encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
+        encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
 
         for index := range values {
             // Replace the specific character '|' in each value
