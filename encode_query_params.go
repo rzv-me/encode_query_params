@@ -42,25 +42,6 @@ func (m *Middleware) Validate() error {
 }
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
-/*
-func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-    // Parse the existing query parameters
-    query := r.URL.Query()
-//    fmt.Println(query)
-    for key, values := range query {
-        for index := range values {
-            // Replace the specific characters in each value
-            values[index] = strings.ReplaceAll(values[index], "[", "%5B")
-            values[index] = strings.ReplaceAll(values[index], "]", "%5D")
-            values[index] = strings.ReplaceAll(values[index], "|", "%7C")
-        }
-        query[key] = values
-    }
-    // Encode the query parameters back into the URL
-    r.URL.RawQuery = query.Encode()
-    return next.ServeHTTP(w, r)
-}
-*/
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
     // Parse the existing query parameters
     query := r.URL.Query()
@@ -68,13 +49,12 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
     for key, values := range query {
         // Encode specific characters in the key
-	encodedKey := key
-    // fix spaces in key
-    // fix tilda ~ in key
-    // fix dots . in key
-//        encodedKey := strings.ReplaceAll(encodedKey, "[", "%5B")
-//        encodedKey = strings.ReplaceAll(encodedKey, "]", "%5D")
+	    encodedKey := key
 
+        encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
+        encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
+        encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
+        encodedKey = strings.ReplaceAll(encodedKey, " ", "%20")
 
         for index := range values {
             // Replace the specific character '|' in each value
@@ -82,11 +62,6 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
             values[index] = strings.ReplaceAll(values[index], ";", "%3B")
 
         }
-
-        encodedKey = strings.ReplaceAll(encodedKey, "|", "%7B")
-        encodedKey = strings.ReplaceAll(encodedKey, ";", "%3B")
-        encodedKey = strings.ReplaceAll(encodedKey, "~", "%7E")
-        encodedKey = strings.ReplaceAll(encodedKey, " ", "%20")
         // Add the modified key and values to the new query object
         encodedQuery[encodedKey] = values
     }
